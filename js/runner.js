@@ -5,26 +5,30 @@ function ParseRunner(game) {
 ParseRunner.prototype.run = function() {
   Parse.initialize($('#appId').val(), $('#jsKey').val())
   $('#loginSection').hide()
-  $('#lobbySection').show()
 
   if (!window.location.hash) {
     console.log("No hash found in URL, creating a new game")
-    this.createGame()
+    this.createGame(this.game.sides[0])
   } else {
     var atPos = window.location.hash.indexOf('@')
-    var side = window.location.hash.substring(1, atPos)
-    var id = window.location.hash.substring(atPos+1)
-    console.log("Hash found in URL, joining game [" + id + "] as [" + side + "]")
-    this.joinGame(id, side)
+    if (atPos != -1) {      
+      var side = window.location.hash.substring(1, atPos)
+      var id = window.location.hash.substring(atPos+1)
+      console.log("Hash found in URL, joining game [" + id + "] as [" + side + "]")
+      this.joinGame(id, side)
+    } else {
+      var side = window.location.hash.substring(1)
+      console.log("Hash found in URL, creating a new game as [" + side + "]")
+      this.createGame(side)
+    }
   }
 }
 
-
-ParseRunner.prototype.createGame = function() {
-  $('#runnerStatus').empty().html('Creating new game')
+ParseRunner.prototype.createGame = function(side) {
+  $('#runnerStatus').empty().html($('Creating a new game as <em>' + side + '</em>'))
 
   var id = Math.random().toString(36).substring(2)
-  var side = this.game.sides[0]
+  var side = side
 
   console.log("Creating game-user [" + id + "] in Parse")
 
@@ -55,7 +59,6 @@ ParseRunner.prototype.joinGame = function(id, side) {
     success: _.bind(function(gameUser) {
       console.log("Game-user authenticated")
 
-      $('#lobbySection').hide()
       $('#gameSection').show()
 
       var links = $('<ul />').appendTo($('#runnerSection'))
