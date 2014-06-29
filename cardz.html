@@ -16,7 +16,7 @@
   <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
   <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
 
-  <script src='js/netrunner.js'></script>
+  <script src='js/cardz.js'></script>
   <script src='js/runner.js'></script>
 </head>
 
@@ -28,37 +28,30 @@
   
   <div id='loginSection'>
     <h1>Log in to Parse</h1>
-    <p>Application ID <br/> <input id='appId' type='text' value='' /></p>
-    <p>Javascript Key <br/> <input id='jsKey' type='text' value='' /></p>
-    <p><button id='loginToParse'>Log in</button></p>
+
+    <p>
+      Application ID <br/>
+      <input id='appId' type='text' value='' />
+    </p>
+
+    <p>
+      Javascript Key <br/>
+      <input id='jsKey' type='text' value='' />
+    </p>
+
+    <p>
+      <button id='loginToParse'>Log in</button>
+    </p>
   </div>
 
   <div id='gameSection'>
-    <div id='opponentSide'>
-      <div class="mainRow">
-        <div class="discard"><div class="title">Discard</div><div class="numCont">?</div></div>
-        <div class="deck"><div class="title">Deck</div><div class="numCont">?</div></div>
-        <div class="identity"><div class="title">Identity</div><div class="cardCont"></div></div>
-        <div class="hand"><div class="title">Hand</div><div class="numCont">?</div></div>
-      </div>
-      <div class="board">
-      </div>
-    </div>
-    <hr/>
-    <div id='ourSide'>
-      <div class="board">
-      </div>
-      <div class="mainRow">
-        <div class="discard"><div class="title">Discard</div><div class="numCont">?</div></div>
-        <div class="deck"><div class="title">Deck</div><div class="numCont">?</div></div>
-        <div class="identity"><div class="title">Identity</div><div class="cardCont"></div></div>
-        <div class="hand"><div class="title">Hand</div><div class="handCont"></div></div>
-      </div>
-    </div>
+      <p id='cards'>Your cards: <br/></p>
+      <p id='score'>Score: us <span id="us">0</span>, opponent <span id="opponent">0</span></p>
+      <p id='history'></p>
   </div>
 
   <script type='text/javascript'>
-    var game = new Netrunner()
+    var game = new Cardz()
     var runner = new ParseRunner(game)
 
     $('#loginToParse').click(function() {

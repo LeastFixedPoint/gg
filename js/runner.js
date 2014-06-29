@@ -30,7 +30,7 @@ ParseRunner.prototype.createGame = function(side) {
   var id = Math.random().toString(36).substring(2)
   var side = side
 
-  console.log("Creating game-user [" + id + "] in Parse")
+  console.log("Creating game-user [" + id + "] in Parse...")
 
   var user = new Parse.User()
   user.set('username', id)
@@ -39,7 +39,7 @@ ParseRunner.prototype.createGame = function(side) {
   user.set('gameState', this.game.initialState())
   user.signUp(null, {
     success: _.bind(function(gameUser) {
-      console.log("Game-user created")
+      console.log("...game-user created")
       window.location.href = window.location.origin + window.location.pathname + "#" + side + "@" + id
       this.joinGame(id, side)
     }, this),
@@ -53,11 +53,11 @@ ParseRunner.prototype.joinGame = function(id, side) {
   this.id = id
   this.side = side
 
-  console.log("Authenticating the game-user [" + this.id + "]")
+  console.log("Authenticating the game-user [" + this.id + "]...")
 
   Parse.User.logIn(this.id, this.id, {
     success: _.bind(function(gameUser) {
-      console.log("Game-user authenticated")
+      console.log("...game-user authenticated")
 
       $('#gameSection').show()
 
@@ -70,12 +70,11 @@ ParseRunner.prototype.joinGame = function(id, side) {
       }
 
       this.user = gameUser
-      this.game.init(this, $('#gameSection'), this.user.get('gameState'), this.side)
+      this.game.init(this, $('#gameSection'), this.side)
+      var ourTurn = this.user.get('waitingFor') == this.side
+      if (ourTurn) { this.startOurTurn() }
       this.game.onNewState(this.user.get('gameState'), this.user.get('waitingFor'))
-
-      if (this.user.get('waitingFor') != side) {
-        this.waitForOurTurn()
-      }
+      if (!ourTurn) { this.waitForOurTurn() }
     }, this),
     error: function(gameUser, error) { alert("Error: " + error.code + " " + error.message) }
   });
@@ -92,10 +91,10 @@ ParseRunner.prototype.onPollSuccess = function(gameUser) {
   this.user = gameUser
 
   if (this.user.get("waitingFor") == this.side) {
-    console.log("Poll ok: it's our turn")
+    console.log("...poll ok: it's our turn")
     this.startOurTurn()
   } else {
-    console.log("Poll ok: waiting for [" + this.user.get("waitingFor") + "]")
+    console.log("...poll ok: waiting for [" + this.user.get("waitingFor") + "]")
     setTimeout(_.bind(this.poll, this), 1000)
   }
 
@@ -109,7 +108,7 @@ ParseRunner.prototype.startOurTurn = function(){
 ParseRunner.prototype.waitForOurTurn = function() {
   $('#runnerStatus').empty().html('Waiting for our turn')
 
-  console.log("Initiating polling for game state")
+  console.log("Initiating polling for game state...")
   this.poll()
 }
 
@@ -119,16 +118,16 @@ ParseRunner.prototype.sendState = function(state, nextSide) {
     return
   }
 
-  console.log("Sending updated game state and passing turn to [" + nextSide + "]")
+  console.log("Sending updated game state and passing turn to [" + nextSide + "]...")
 
-  var t = this
   this.user.set('waitingFor', nextSide)
   this.user.set('gameState', state)
+
   this.user.save(null, {
-      success: function(gameUser) {
-        console.log("Updated game state sent")
-        t.waitForOurTurn()
-      }, 
-      error: function(gameUser, error) { alert("Error: " + error.code + " " + error.message) }
+    success: _.bind(function(gameUser) {
+      console.log("...updated game state sent")
+      this.waitForOurTurn()
+    }, this), 
+    error: function(gameUser, error) { alert("Error: " + error.code + " " + error.message) }
   })
 }

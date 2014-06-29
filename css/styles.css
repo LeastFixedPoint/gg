@@ -8,7 +8,46 @@ body, html {
 
 #loginSection input { width: 400px; font-family: monospace; }
 
-div.card { display: inline-block; border: 1px solid black; margin-right: 5px; padding: 5px; padding: 20px;}
+div.mainRow {
+  display: flex;
+}
+
+div.mainRow > div:not(:first-child) { margin-left: 10px; }
+
+div.discard, div.identity, div.deck, div.hand {
+  display: flex;
+  flex-direction: column;
+
+  width: 200px;
+  height: 240px;
+}
+div.discard, div.identity, div.deck { flex: 0 0 auto; }
+#ourSide div.hand { flex-grow: 1; width: inherit; height: inherit; }
+#oppositeSide div.hand {}
+
+div.cardCont, div.numCont, div.handCont { flex-grow: 1; display: flex; background: #ddd; padding: 10px; }
+div.handCont { padding-top: 0px; padding-right: 0px; }
+
+div.numCont {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 100px; 
+}
+
+div.handCont { flex-wrap: wrap; }
+div.handCont > div.card { margin-right: 10px; margin-top: 10px; }
+
+div.card {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  height: 200px;
+  border: 1px solid black; 
+}
+div.card div.title, div.card div.body { padding: 5px; }
+div.card div.title { flex: 0 0 auto; background: #000; color: #fff; }
+div.card div.body { flex: 1 1 auto; overflow: auto; padding: 5px; font-size: small; }
 
 em {
   font-style: normal;
