@@ -1,0 +1,83 @@
+<!doctype html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>My Parse App</title>
+  
+  <meta name='description' content='My Parse App'>
+  <meta name='viewport' content='width=device-width'>
+  
+  <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css'>
+  <link rel='stylesheet' href='css/styles.css'>
+  
+  <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+  <script type='text/javascript' src='http://www.parsecdn.com/js/parse-1.2.18.min.js'></script>
+  <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+  <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
+
+  <script src='js/cardz.js'></script>
+  <script src='js/runner.js'></script>
+</head>
+
+<body>
+
+  <div id="runnerSection">
+    <div id="runnerStatus"></div>
+  </div>
+  
+  <div id='loginSection'>
+    <h1>Log in to Parse</h1>
+
+    <p>
+      Application ID <br/>
+      <input id='appId' type='text' value='LUnIMrZ07VCcMHvYhK2EevwHBGD209G3Xge6mJS1' />
+    </p>
+
+    <p>
+      Javascript Key <br/>
+      <input id='jsKey' type='text' value='bk9WxyBQT0PwOzLoyynIAbKGETI0Z0pYPKCoPzeU' />
+    </p>
+
+    <p>
+      <button id='loginToParse'>Log in</button>
+    </p>
+  </div>
+
+  <div id='lobbySection'>
+    <button id='createGame'>Create game</button>
+
+    <p>
+      Game Key <br/>
+      <input id='gameKey' type='text' />
+      <select>
+        <option>First</option>
+        <option>Second</option>
+      </select>
+    </p>
+  </div>
+
+  <div id='gameSection'>
+      <p id='cards'>Your cards: <br/></p>
+      <p id='score'>Score: us <span id="us">0</span>, opponent <span id="opponent">0</span></p>
+      <p id='history'></p>
+  </div>
+
+  <script type='text/javascript'>
+    var game = new Cardz()
+    var runner = new ParseRunner(game)
+
+    $('#loginToParse').click(function() {
+      runner.run()
+    })
+
+    // SCRIPTED
+
+    $('#appId').val('LUnIMrZ07VCcMHvYhK2EevwHBGD209G3Xge6mJS1')
+    $('#jsKey').val('bk9WxyBQT0PwOzLoyynIAbKGETI0Z0pYPKCoPzeU')
+    $('#loginToParse').trigger('click')
+
+  </script>
+</body>
+
+</html>
