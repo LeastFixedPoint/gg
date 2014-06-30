@@ -94,8 +94,6 @@ Netrunner.prototype.updateBoard = function() {
       $('.side.corp .section.them.hq .count', this.root).empty().text(this.state.corp.hand.length)
     }
   }
-
-
 }
 
 Netrunner.prototype.sendState = function() { this.gameRunner.sendState(this.state, this.opponent) }
@@ -115,79 +113,89 @@ var CARD = {
   newInstance: function() { return { name: this.name, state: this.newState } },
   newState: {},
   title: function() { return this.name },
+  description: function() {
+    var s = NAMES[this.type]
+    if ('playCost' in this)    { s += '<br />Play cost <em>' + this.playCost + '</em>' }
+    if ('rezCost' in this)     { s += '<br />Rez cost <em>' + this.rezCost + '</em>' }
+    if ('installCost' in this) { s += '<br />Install cost <em>' + this.installCost + '</em>' }
+    if (!!this.fluff)          { s += '<br/><br/><i>' + this.fluff + '</i>' }
+    return s
+  },
   render: function(state) {
-    return $('<div class="card ' + this.type + '"><div class="title">' + this.title() + '</div><div class="body">' + this.description + '</div></div>')
+    return $('<div class="card ' + this.type + '"><div class="title">' + this.title() + '</div><div class="body">' + this.description() + '</div></div>')
   },
 }
 
-WITH_COST = {
-  title: function() { return '<div class="cost">' + this.cost + '</div>' + this.name }
+var NAMES = {
+  identity: "Identity",
+  operation: "Operation", asset: "Asset", ice: "ICE", agenda: "Agenda",
+  event: "Event", software: "Software", hardware: "Hardware", resource: "Resource",
 }
 
 var IDENTITY  = extend(CARD, { type: 'identity' })
-var OPERATION = extend(CARD, WITH_COST, { type: 'operation', cost: 0 })
-var ASSET     = extend(CARD, WITH_COST, { type: 'asset', cost: 0 })
-var UPGRADE   = extend(CARD, WITH_COST, { type: 'upgrade', cost: 0 })
-var ICE       = extend(CARD, WITH_COST, { type: 'ice', cost: 0 })
+var OPERATION = extend(CARD, { type: 'operation', playCost: 0 })
+var ASSET     = extend(CARD, { type: 'asset', rezCost: 0 })
+var UPGRADE   = extend(CARD, { type: 'upgrade', rezCost: 0 })
+var ICE       = extend(CARD, { type: 'ice', rezCost: 0 })
 var AGENDA    = extend(CARD, { type: 'agenda' })
-var EVENT     = extend(CARD, WITH_COST, { type: 'event', cost: 0 })
-var HARDWARE  = extend(CARD, WITH_COST, { type: 'hardware', cost: 0 })
-var SOFTWARE  = extend(CARD, WITH_COST, { type: 'software', cost: 0 })
-var RESOURCE  = extend(CARD, WITH_COST, { type: 'resource', cost: 0 })
+var EVENT     = extend(CARD, { type: 'event', playCost: 0 })
+var HARDWARE  = extend(CARD, { type: 'hardware', installCost: 0 })
+var SOFTWARE  = extend(CARD, { type: 'software', installCost: 0 })
+var RESOURCE  = extend(CARD, { type: 'resource', installCost: 0 })
 
 addCard(extend(IDENTITY, {
   name: "Aperture Science",
-  description: "We do what we must because we can.",
+  fluff: "We do what we must because we can.",
 }))
 
 addCard(extend(ICE, {
   name: "AntiVir Enterprise Pro",
-  description: "Protect your server just for $99.99 per month!",
+  fluff: "Protect your server just for $99.99 per month!",
 }))
 
 addCard(extend(OPERATION, {
   name: "Business As Usual",
-  description: "Gain money. A lot.",
+  fluff: "Gain money. A lot.",
 }))
 
 addCard(extend(UPGRADE, {
   name: "Registry Optimizer",
-  description: "Supercharge PC performance!",
+  fluff: "Supercharge PC performance!",
 }))
 
 addCard(extend(ASSET, {
   name: "Chairman Evil",
-  description: "This is an executive. Give him a severance package.",
+  fluff: "This is an executive. Give him a severance package.",
 }))
 
 addCard(extend(AGENDA, {
   name: "Ultimate Goal",
-  description: "Make all your base belong to us.",
+  fluff: "Make all your base belong to us.",
 }))
 
 addCard(extend(IDENTITY, {
   name: "Digital Warrior",
-  description: "We are the ones who ride the edge<br/>We have no boundaries to defend<br/>We are a nuclear drive of viral strength<br/><br/>We are the offspring of a dream<br/>We have to fight and we can win<br/>We own the sharpest weapons of the grid",
+  fluff: "We are the ones who ride the edge<br/>We have no boundaries to defend<br/>We are a nuclear drive of viral strength<br/><br/>We are the offspring of a dream<br/>We have to fight and we can win<br/>We own the sharpest weapons of the grid",
 }))
 
 addCard(extend(EVENT, {
   name: "Rob a Bank",
-  description: "Online, of course.",
+  fluff: "Online, of course.",
 }))
 
 addCard(extend(SOFTWARE, {
   name: "Icebreaker",
-  description: "Hey, how are you doing?",
+  fluff: "Hey, how are you doing?",
 }))
 
 addCard(extend(HARDWARE, {
   name: "Arduino Mini",
-  description: "Everyone starts with something.",
+  fluff: "Everyone starts with something.",
 }))
 
 addCard(extend(RESOURCE, {
   name: "Old Friend",
-  description: "Would sleep and drink for you anytime.",
+  fluff: "Would sleep and drink for you anytime.",
 }))
 
 Netrunner.prototype.decks = {

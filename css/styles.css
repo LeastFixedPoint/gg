@@ -10,7 +10,7 @@ ul.links { margin: 0; padding: 0; }
 .side.them .us { display: none; }
 
 .side { display: flex; }
-.side.us, .side.us .server { flex-direction: column-reverse; }
+.side.us { flex-direction: column-reverse; }
 .side.them { flex-direction: column }
 
 .row { display: flex; min-height: 160px; }
@@ -33,16 +33,29 @@ ul.links { margin: 0; padding: 0; }
 .section.stats { font-size: 18px; }
 .section.stats > * { flex-grow: 1; display: flex; align-items: center; }
 
-.section.main.hq, .section.main.grip, .section.rig { 
+.section.main.hq, .section.main.grip, .section.rig, .section.servers { 
   width: auto; flex-grow: 1; flex-direction: row; flex-wrap: wrap; padding-left: 0; padding-top: 0; height: auto; }
-.section.main.hq > .card, .section.main.grip > .card, .section.rig > .card { margin-left: 10px; margin-top: 10px; }
+.section.main.hq > .card, .section.main.grip > .card, .section.rig > .card, .section.servers > .card { margin-left: 10px; margin-top: 10px; }
 .section.them.hq, .section.them.grip { align-items: center; font-size: 80px; padding-left: 40px; }
 
-.row.servers, .section.server { min-height: 0; height: auto; }
-.side.us .section.server { align-self: flex-end; }
-.side.them .section.server { align-self: flex-start; }
+.row.servers, .server { display: flex; min-height: 0; height: auto; }
+.side.us .server { align-self: flex-end; flex-direction: column-reverse; }
+.side.them .server { align-self: flex-start; }
 
-.section.server > .target { background-color: #000; color: #fff; padding: 5px;}
+.server { margin-left: 10px; margin-top: 10px; }
+.server > .target, .server > .ice { 
+  background-color: #000; color: #fff; padding: 5px; width: 200px; height: 30px; display: flex; align-items: center; }
+.side.us .server > .ice, .side.us .server > hr { margin-bottom: 10px; }
+.side.them .server > .ice, .side.them .server > hr { margin-top: 10px; }
+.server > hr {
+  margin: 0;
+  height: 5px;
+  width: 33%;
+  background-color: black;
+  border: none;
+  align-self: center;
+}
+
 .side.us .section.server > .target:not(:first-child) { margin-bottom: 5px; }
 .side.them .section.server > .target:not(:first-child) { margin-top: 5px; }
 
@@ -53,21 +66,7 @@ ul.links { margin: 0; padding: 0; }
   height: 160px;
   border: 1px solid black; 
 }
-.card .title { height: 40px; display: flex; align-items: center; font-size: 14px; border-bottom: 1px solid black; }
-.card .title .cost {
-  flex-shrink: 0;
-  display: flex;
-  margin-right: 6px;
-  width: 30px;
-  height: 30px;
-  color: #000;
-  background: #fff;
-  z-index: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-weight: bold;
-}
+.card .title { height: 30px; display: flex; align-items: center; }
 .card .title, .card .body { padding: 5px; }
 .card .title { flex: 0 0 auto; background: #000; color: #fff; }
 .card .body { flex: 1 1 auto; background: #fff; overflow: auto; padding: 5px; font-size: small; }
