@@ -46,16 +46,31 @@ ul.links { margin: 0; padding: 0; }
 .side.us .section.server > .target:not(:first-child) { margin-bottom: 5px; }
 .side.them .section.server > .target:not(:first-child) { margin-top: 5px; }
 
-div.card {
+.card {
   display: flex;
   flex-direction: column;
   width: 200px;
   height: 160px;
   border: 1px solid black; 
 }
-div.card div.title, div.card div.body { padding: 5px; }
-div.card div.title { flex: 0 0 auto; background: #000; color: #fff; }
-div.card div.body { flex: 1 1 auto; background: #fff; overflow: auto; padding: 5px; font-size: small; }
+.card .title { height: 40px; display: flex; align-items: center; font-size: 14px; border-bottom: 1px solid black; }
+.card .title .cost {
+  flex-shrink: 0;
+  display: flex;
+  margin-right: 6px;
+  width: 30px;
+  height: 30px;
+  color: #000;
+  background: #fff;
+  z-index: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+.card .title, .card .body { padding: 5px; }
+.card .title { flex: 0 0 auto; background: #000; color: #fff; }
+.card .body { flex: 1 1 auto; background: #fff; overflow: auto; padding: 5px; font-size: small; }
 
 em {
   font-style: normal;

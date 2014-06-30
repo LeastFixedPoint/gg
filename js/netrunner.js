@@ -100,36 +100,40 @@ Netrunner.prototype.updateBoard = function() {
 
 Netrunner.prototype.sendState = function() { this.gameRunner.sendState(this.state, this.opponent) }
 
-Netrunner.prototype.renderCard = function(card) {
-  return CARDS[card.name].render(card.state)
-}
+Netrunner.prototype.renderCard = function(card) { return CARDS[card.name].render(card.state) }
 
 
 
 
 
-function extend(base, self) { return _.defaults(self, base) }
+function extend() { return _.extend.apply(this, [{}].concat(Array.prototype.slice.call(arguments))) }
 
 var CARDS = {}
 function addCard(card) { CARDS[card.name] = card }
 
-var CARD = {}
-CARD.newInstance = function() { return { name: this.name, state: this.newState } }
-CARD.newState = {}
-CARD.render = function(state) {
-  return $('<div class="card"><div class="title">' + this.name + '</div><div class="body">' + this.description + '</div></div>')
+var CARD = {
+  newInstance: function() { return { name: this.name, state: this.newState } },
+  newState: {},
+  title: function() { return this.name },
+  render: function(state) {
+    return $('<div class="card ' + this.type + '"><div class="title">' + this.title() + '</div><div class="body">' + this.description + '</div></div>')
+  },
+}
+
+WITH_COST = {
+  title: function() { return '<div class="cost">' + this.cost + '</div>' + this.name }
 }
 
 var IDENTITY  = extend(CARD, { type: 'identity' })
-var OPERATION = extend(CARD, { type: 'operation' })
-var ASSET     = extend(CARD, { type: 'asset' })
-var UPGRADE   = extend(CARD, { type: 'upgrade' })
-var ICE       = extend(CARD, { type: 'ice' })
+var OPERATION = extend(CARD, WITH_COST, { type: 'operation', cost: 0 })
+var ASSET     = extend(CARD, WITH_COST, { type: 'asset', cost: 0 })
+var UPGRADE   = extend(CARD, WITH_COST, { type: 'upgrade', cost: 0 })
+var ICE       = extend(CARD, WITH_COST, { type: 'ice', cost: 0 })
 var AGENDA    = extend(CARD, { type: 'agenda' })
-var EVENT     = extend(CARD, { type: 'event' })
-var HARDWARE  = extend(CARD, { type: 'hardware' })
-var SOFTWARE  = extend(CARD, { type: 'software' })
-var RESOURCE  = extend(CARD, { type: 'resource' })
+var EVENT     = extend(CARD, WITH_COST, { type: 'event', cost: 0 })
+var HARDWARE  = extend(CARD, WITH_COST, { type: 'hardware', cost: 0 })
+var SOFTWARE  = extend(CARD, WITH_COST, { type: 'software', cost: 0 })
+var RESOURCE  = extend(CARD, WITH_COST, { type: 'resource', cost: 0 })
 
 addCard(extend(IDENTITY, {
   name: "Aperture Science",
