@@ -7,13 +7,11 @@
   <meta name='description' content='My Parse App'>
   <meta name='viewport' content='width=device-width'>
   
-  <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
-  <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css'>
+  <link rel='stylesheet' href='css/normalize.css'>
   <link rel='stylesheet' href='css/styles.css'>
   
   <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
   <script type='text/javascript' src='http://www.parsecdn.com/js/parse-1.2.18.min.js'></script>
-  <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
   <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
 
   <script src='js/netrunner.js'></script>
@@ -33,28 +31,43 @@
     <p><button id='loginToParse'>Log in</button></p>
   </div>
 
-  <div id='gameSection'>
-    <div id='opponentSide'>
-      <div class="mainRow">
-        <div class="discard"><div class="title">Discard</div><div class="numCont">?</div></div>
-        <div class="deck"><div class="title">Deck</div><div class="numCont">?</div></div>
-        <div class="identity"><div class="title">Identity</div><div class="cardCont"></div></div>
-        <div class="hand"><div class="title">Hand</div><div class="numCont">?</div></div>
+  <div id="gameSection">
+    <div class="side">
+      <div class="row main">
+        <div class="section stats">
+          <div class="clicks"><span class="count">?</span>&nbsp;clicks</div>
+          <div class="credits"><span class="count">?</span>&nbsp;credits</div>
+
+          <div class="runner tags"><span class="count">?</span>&nbsp;tags</div>
+          <div class="runner heap"><span class="count">?</span>&nbsp;cards in heap</div>
+          <div class="runner stack"><span class="count">?</span>&nbsp;cards in stack</div>
+
+          <div class="corp badpub"><span class="count">?</span>&nbsp;bad publicity</div>
+          <div class="corp archives"><span class="count">?</span>&nbsp;cards in archives</div>
+          <div class="corp rnd"><span class="count">?</span>&nbsp;cards in R&amp;D</div>
+        </div>
+
+        <div class="section identity"></div>
+
+        <div class="section main runner us grip"></div>
+        <div class="section main corp us hq"></div>
+        <div class="section main runner them grip"><span class="count">?</span>&nbsp;cards in grip</div>
+        <div class="section main corp them hq"><span class="count">?</span>&nbsp;cards in HQ</div>
       </div>
-      <div class="board">
+
+      <div class="row runner rig">
+        <div class="section main rig"></div>
+      </div>
+
+      <div class="row corp servers">
+        <div class="section server archives"><div class="target">Archives</div></div>
+        <div class="section server rnd"><div class="target">R&amp;D</div></div>
+        <div class="section server hq"><div class="target">HQ</div><hr/><div class="target">Ice1</div><div class="target">Ice2</div></div>
       </div>
     </div>
+    
     <hr/>
-    <div id='ourSide'>
-      <div class="board">
-      </div>
-      <div class="mainRow">
-        <div class="discard"><div class="title">Discard</div><div class="numCont">?</div></div>
-        <div class="deck"><div class="title">Deck</div><div class="numCont">?</div></div>
-        <div class="identity"><div class="title">Identity</div><div class="cardCont"></div></div>
-        <div class="hand"><div class="title">Hand</div><div class="handCont"></div></div>
-      </div>
-    </div>
+
   </div>
 
   <script type='text/javascript'>

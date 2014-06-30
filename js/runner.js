@@ -61,7 +61,7 @@ ParseRunner.prototype.joinGame = function(id, side) {
 
       $('#gameSection').show()
 
-      var links = $('<ul />').appendTo($('#runnerSection'))
+      var links = $('<ul class="links" />').appendTo($('#runnerSection'))
       for (i in this.game.sides) {
         var side = this.game.sides[i]
         if (side == this.side) { continue }

@@ -1,53 +1,61 @@
-body, html {
-  margin: 0px;
-  padding: 0px;
-}
-
 #runnerSection { background: #000; color: #fff; }
 #loginSection, #gameSection { display: none; }
-
 #loginSection input { width: 400px; font-family: monospace; }
 
-div.mainRow {
-  display: flex;
-}
+ul.links { margin: 0; padding: 0; }
 
-div.mainRow > div:not(:first-child) { margin-left: 10px; }
+.side.runner .corp { display: none; }
+.side.corp .runner { display: none; }
+.side.us .them { display: none; }
+.side.them .us { display: none; }
 
-div.discard, div.identity, div.deck, div.hand {
+.side { display: flex; }
+.side.us, .side.us .server { flex-direction: column-reverse; }
+.side.them { flex-direction: column }
+
+.row { display: flex; min-height: 160px; }
+.side.us > .row { margin-top: 10px; }
+.side.them > .row { margin-bottom: 10px; }
+.row > :not(:first-child) { margin-left: 10px; }
+
+.section {
   display: flex;
   flex-direction: column;
 
   width: 200px;
-  height: 240px;
-}
-div.discard, div.identity, div.deck { flex: 0 0 auto; }
-#ourSide div.hand { flex-grow: 1; width: inherit; height: inherit; }
-#oppositeSide div.hand {}
-
-div.cardCont, div.numCont, div.handCont { flex-grow: 1; display: flex; background: #ddd; padding: 10px; }
-div.handCont { padding-top: 0px; padding-right: 0px; }
-
-div.numCont {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 100px; 
+  height: 160px;
+  padding: 10px;
+  background-color: #ddd;
 }
 
-div.handCont { flex-wrap: wrap; }
-div.handCont > div.card { margin-right: 10px; margin-top: 10px; }
+.section.stats, .section.identity { flex-shrink: 0; }
+
+.section.stats { font-size: 18px; }
+.section.stats > * { flex-grow: 1; display: flex; align-items: center; }
+
+.section.main.hq, .section.main.grip, .section.rig { 
+  width: auto; flex-grow: 1; flex-direction: row; flex-wrap: wrap; padding-left: 0; padding-top: 0; height: auto; }
+.section.main.hq > .card, .section.main.grip > .card, .section.rig > .card { margin-left: 10px; margin-top: 10px; }
+.section.them.hq, .section.them.grip { align-items: center; font-size: 80px; padding-left: 40px; }
+
+.row.servers, .section.server { min-height: 0; height: auto; }
+.side.us .section.server { align-self: flex-end; }
+.side.them .section.server { align-self: flex-start; }
+
+.section.server > .target { background-color: #000; color: #fff; padding: 5px;}
+.side.us .section.server > .target:not(:first-child) { margin-bottom: 5px; }
+.side.them .section.server > .target:not(:first-child) { margin-top: 5px; }
 
 div.card {
   display: flex;
   flex-direction: column;
   width: 200px;
-  height: 200px;
+  height: 160px;
   border: 1px solid black; 
 }
 div.card div.title, div.card div.body { padding: 5px; }
 div.card div.title { flex: 0 0 auto; background: #000; color: #fff; }
-div.card div.body { flex: 1 1 auto; overflow: auto; padding: 5px; font-size: small; }
+div.card div.body { flex: 1 1 auto; background: #fff; overflow: auto; padding: 5px; font-size: small; }
 
 em {
   font-style: normal;

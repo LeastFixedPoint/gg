@@ -24,6 +24,12 @@ Netrunner.prototype.init = function(gameRunner, root, side) {
   this.side = side
   this.root = root
   this.opponent = this.side == 'runner' ? 'corp' : 'runner'
+
+  var opponentSide = $('.side', root)
+  var usSide = opponentSide.clone().appendTo(root)
+
+  opponentSide.addClass(this.opponent).addClass('them')
+  usSide.addClass(this.side).addClass('us')
 }
 
 Netrunner.prototype.onNewState = function(state, currentSide) {
@@ -61,21 +67,35 @@ Netrunner.prototype.setupDeck = function() {
 }
 
 Netrunner.prototype.updateBoard = function() {
-  if (this.state[this.side].deckSetup) {
-    $('#ourSide .mainRow .identity .cardCont', this.root).empty().append(this.renderCard(this.state[this.side].identity))
-    $('#ourSide .mainRow .deck .numCont', this.root).text(this.state[this.side].deck.length)
-    $('#ourSide .mainRow .discard .numCont', this.root).text(this.state[this.side].discard.length)
-    
-    var handCont = $('#ourSide .mainRow .hand .handCont', this.root).empty()
-    this.state[this.side].hand.map(function(card) { handCont.append(this.renderCard(card)) }, this)
+  if (this.state.runner.deckSetup) {
+    $('.side.runner .section.identity', this.root).empty().append(this.renderCard(this.state.runner.identity))
+    $('.side.runner .section.stats .clicks .count', this.root).text(this.state.runner.clicks)
+    $('.side.runner .section.stats .stack .count', this.root).text(this.state.runner.deck.length)
+    $('.side.runner .section.stats .heap .count', this.root).text(this.state.runner.discard.length)
+
+    if (this.side == 'runner') {
+      var grip = $('.side.runner .section.us.grip', this.root).empty()
+      this.state.runner.hand.map(function(card) { grip.append(this.renderCard(card)) }, this)
+    } else {
+      $('.side.runner .section.them.grip .count', this.root).empty().text(this.state.runner.hand.length)
+    }
   }
 
-  if (this.state[this.opponent].deckSetup) {
-    $('#opponentSide .mainRow .identity .cardCont', this.root).empty().append(this.renderCard(this.state[this.opponent].identity))
-    $('#opponentSide .mainRow .deck .numCont', this.root).text(this.state[this.opponent].deck.length)
-    $('#opponentSide .mainRow .discard .numCont', this.root).text(this.state[this.opponent].discard.length)
-    $('#opponentSide .mainRow .hand .numCont', this.root).text(this.state[this.opponent].hand.length)
+  if (this.state.corp.deckSetup) {
+    $('.side.corp .section.identity', this.root).empty().append(this.renderCard(this.state.corp.identity))
+    $('.side.corp .section.stats .clicks .count', this.root).text(this.state.corp.clicks)
+    $('.side.corp .section.stats .rnd .count', this.root).text(this.state.corp.deck.length)
+    $('.side.corp .section.stats .archives .count', this.root).text(this.state.corp.discard.length)
+
+    if (this.side == 'corp') {
+      var hq = $('.side.corp .section.us.hq', this.root).empty()
+      this.state.corp.hand.map(function(card) { hq.append(this.renderCard(card)) }, this)
+    } else {
+      $('.side.corp .section.them.hq .count', this.root).empty().text(this.state.corp.hand.length)
+    }
   }
+
+
 }
 
 Netrunner.prototype.sendState = function() { this.gameRunner.sendState(this.state, this.opponent) }
