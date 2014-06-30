@@ -31,7 +31,7 @@ ul.links { margin: 0; padding: 0; }
 .section.stats, .section.identity { flex-shrink: 0; }
 
 .section.stats { font-size: 18px; }
-.section.stats > * { flex-grow: 1; display: flex; align-items: center; }
+.section.stats > * { flex-grow: 1; display: flex; align-items: center; justify-content: space-between; }
 
 .section.main.hq, .section.main.grip, .section.rig, .section.servers { 
   width: auto; flex-grow: 1; flex-direction: row; flex-wrap: wrap; padding-left: 0; padding-top: 0; height: auto; }
@@ -40,7 +40,7 @@ ul.links { margin: 0; padding: 0; }
 
 .row.servers, .server { display: flex; min-height: 0; height: auto; }
 .side.us .server { align-self: flex-end; flex-direction: column-reverse; }
-.side.them .server { align-self: flex-start; }
+.side.them .server { align-self: flex-start; flex-direction: column; }
 
 .server { margin-left: 10px; margin-top: 10px; }
 .server > .target, .server > .ice { 
@@ -56,9 +56,6 @@ ul.links { margin: 0; padding: 0; }
   align-self: center;
 }
 
-.side.us .section.server > .target:not(:first-child) { margin-bottom: 5px; }
-.side.them .section.server > .target:not(:first-child) { margin-top: 5px; }
-
 .card {
   display: flex;
   flex-direction: column;
@@ -66,10 +63,40 @@ ul.links { margin: 0; padding: 0; }
   height: 160px;
   border: 1px solid black; 
 }
-.card .title { height: 30px; display: flex; align-items: center; }
+.card .title { height: 30px; display: flex; align-items: center; justify-content: space-between; }
 .card .title, .card .body { padding: 5px; }
 .card .title { flex: 0 0 auto; background: #000; color: #fff; }
 .card .body { flex: 1 1 auto; background: #fff; overflow: auto; padding: 5px; font-size: small; }
+    
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+
+.trigger {
+  flex-shrink: 0;
+  background-image: -webkit-linear-gradient(black, red, black);
+  z-index: 0;
+  margin-right: 0;
+  border-radius: 50%;
+  -webkit-animation-name: spin;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+}
+.trigger:hover {
+  background-image: -webkit-linear-gradient(black, white, black);
+}
+.card .title .trigger {
+  height: 50px;
+  width: 50px;
+  margin: -5px;
+}
+.section.stats .trigger {
+  height: 40px;
+  width: 40px;
+  margin: -15px;
+}
 
 em {
   font-style: normal;

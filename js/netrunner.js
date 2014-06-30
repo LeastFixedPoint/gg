@@ -30,6 +30,8 @@ Netrunner.prototype.init = function(gameRunner, root, side) {
 
   opponentSide.addClass(this.opponent).addClass('them')
   usSide.addClass(this.side).addClass('us')
+
+  $('.endturn').click(_.bind(function(e) { this.sendState() }, this))
 }
 
 Netrunner.prototype.onNewState = function(state, currentSide) {
@@ -45,6 +47,7 @@ Netrunner.prototype.onNewState = function(state, currentSide) {
 }
 
 Netrunner.prototype.beginOurTurn = function() {
+  this.state[this.side].canSpendClicks = true
   this.state[this.side].clicks = this.state[this.side].maxClicks
   this.updateBoard()
 }
@@ -68,37 +71,57 @@ Netrunner.prototype.setupDeck = function() {
 
 Netrunner.prototype.updateBoard = function() {
   if (this.state.runner.deckSetup) {
-    $('.side.runner .section.identity', this.root).empty().append(this.renderCard(this.state.runner.identity))
+    $('.side.runner .section.identity', this.root).empty().append(renderCard(this.state.runner.identity))
     $('.side.runner .section.stats .clicks .count', this.root).text(this.state.runner.clicks)
+    $('.side.runner .section.stats .credits .count', this.root).text(this.state.runner.credits)
     $('.side.runner .section.stats .stack .count', this.root).text(this.state.runner.deck.length)
     $('.side.runner .section.stats .heap .count', this.root).text(this.state.runner.discard.length)
 
     if (this.side == 'runner') {
       var grip = $('.side.runner .section.us.grip', this.root).empty()
-      this.state.runner.hand.map(function(card) { grip.append(this.renderCard(card)) }, this)
+      this.state.runner.hand.map(function(card) { grip.append(renderCard(card)) }, this)
     } else {
       $('.side.runner .section.them.grip .count', this.root).empty().text(this.state.runner.hand.length)
     }
   }
 
   if (this.state.corp.deckSetup) {
-    $('.side.corp .section.identity', this.root).empty().append(this.renderCard(this.state.corp.identity))
+    $('.side.corp .section.identity', this.root).empty().append(renderCard(this.state.corp.identity))
     $('.side.corp .section.stats .clicks .count', this.root).text(this.state.corp.clicks)
+    $('.side.corp .section.stats .credits .count', this.root).text(this.state.corp.credits)
     $('.side.corp .section.stats .rnd .count', this.root).text(this.state.corp.deck.length)
     $('.side.corp .section.stats .archives .count', this.root).text(this.state.corp.discard.length)
 
     if (this.side == 'corp') {
       var hq = $('.side.corp .section.us.hq', this.root).empty()
-      this.state.corp.hand.map(function(card) { hq.append(this.renderCard(card)) }, this)
+      this.state.corp.hand.map(function(card) { hq.append(renderCard(card)) }, this)
     } else {
       $('.side.corp .section.them.hq .count', this.root).empty().text(this.state.corp.hand.length)
     }
   }
+
+  $('.trigger', this.root).hide()
+
+  this.state[this.side].hand.map(function(card, i) {
+    var opts = CARDS[card.name].playingOptions(this.state)
+    if (opts.length) {
+      $($('.side.us .section.hand .trigger', this.root)[i]).show()
+    }
+  }, this)
+
+  if (this.state[this.side].canSpendClicks) {
+    $('.side.us .section.stats .credits .trigger', this.root).show()
+    $('.side.us .section.stats .deck .trigger', this.root).show()
+  }
 }
 
-Netrunner.prototype.sendState = function() { this.gameRunner.sendState(this.state, this.opponent) }
+Netrunner.prototype.sendState = function() { 
+  this.state[this.side].canSpendClicks = false
+  this.updateBoard()
+  this.gameRunner.sendState(this.state, this.opponent)
+}
 
-Netrunner.prototype.renderCard = function(card) { return CARDS[card.name].render(card.state) }
+function renderCard(card) { return CARDS[card.name].render(card.state) }
 
 
 
@@ -114,7 +137,7 @@ var CARD = {
   newState: {},
   title: function() { return this.name },
   description: function() {
-    var s = NAMES[this.type]
+    var s = '<em>' + NAMES[this.type] + '</em>'
     if ('playCost' in this)    { s += '<br />Play cost <em>' + this.playCost + '</em>' }
     if ('rezCost' in this)     { s += '<br />Rez cost <em>' + this.rezCost + '</em>' }
     if ('installCost' in this) { s += '<br />Install cost <em>' + this.installCost + '</em>' }
@@ -122,8 +145,12 @@ var CARD = {
     return s
   },
   render: function(state) {
-    return $('<div class="card ' + this.type + '"><div class="title">' + this.title() + '</div><div class="body">' + this.description() + '</div></div>')
+    return $('<div/>').addClass('card').addClass(this.type)
+      .append($('<div/>').addClass('title').html(this.title())
+        .append($('<div/>').addClass('trigger')))
+      .append($('<div/>').addClass('body').html(this.description()))
   },
+  playingOptions: function(state) { return [] }
 }
 
 var NAMES = {
@@ -133,12 +160,20 @@ var NAMES = {
 }
 
 var IDENTITY  = extend(CARD, { type: 'identity' })
-var OPERATION = extend(CARD, { type: 'operation', playCost: 0 })
+var OPERATION = extend(CARD, { 
+  type: 'operation', 
+  playCost: 0,
+  playingOptions: function(state) { return (state.corp.canSpendClicks && this.playCost <= state.corp.credits) ? ['yes'] : [] },
+})
 var ASSET     = extend(CARD, { type: 'asset', rezCost: 0 })
 var UPGRADE   = extend(CARD, { type: 'upgrade', rezCost: 0 })
 var ICE       = extend(CARD, { type: 'ice', rezCost: 0 })
 var AGENDA    = extend(CARD, { type: 'agenda' })
-var EVENT     = extend(CARD, { type: 'event', playCost: 0 })
+var EVENT     = extend(CARD, { 
+  type: 'event',
+  playCost: 0,
+  playingOptions: function(state) { return (state.runner.canSpendClicks && this.playCost <= state.runner.credits) ? ['yes'] : [] },
+})
 var HARDWARE  = extend(CARD, { type: 'hardware', installCost: 0 })
 var SOFTWARE  = extend(CARD, { type: 'software', installCost: 0 })
 var RESOURCE  = extend(CARD, { type: 'resource', installCost: 0 })
